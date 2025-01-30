@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEMIS Student Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 380px;
+            font-family: Arial, sans-serif;
+            border-top: 4px solid #008000;
+        }
+        .login-container img {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .login-container h3 {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #333;
+        }
+        .login-container p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid red;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+        .input-group i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: red;
+        }
+        .remember {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .remember input {
+            margin-right: 5px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        .oneid-login {
+            background-color: #6c5ce7;
+        }
+        .footer {
+            font-size: 12px;
+            color: #888;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="logo.png" alt="FDU Logo">
+        <h3>Farg'ona davlat universiteti</h3>
+        <p>HEMIS Student axborot tizimi</p>
+        <div class="input-group">
+            <input type="text" id="question" placeholder="Talaba ID">
+            <i>&#9993;</i>
+        </div>
+        <div class="input-group">
+            <input type="text" id="answer" placeholder="Parol" readonly>
+            <i>&#128274;</i>
+        </div>
+        <div class="input-group">
+            <input type="text" id="new-question" placeholder="Yangi savol">
+        </div>
+        <div class="input-group">
+            <input type="text" id="new-answer" placeholder="Yangi javob">
+        </div>
+        <button onclick="getAnswer()">Kirish</button>
+        <button class="oneid-login">OneID orqali kirish</button>
+        <button onclick="addNewQA()">Savol va javob qo'shish</button>
+        <p class="footer">Dastur versiyasi: 0.9.53 / UID: 342 / Sana: 30.01.2025</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("question").addEventListener("input", getAnswer);
+            loadQuestions();
+        });
+        
+        let answers = {};
+
+        function loadQuestions() {
+            let storedAnswers = localStorage.getItem("answers");
+            if (storedAnswers) {
+                answers = JSON.parse(storedAnswers);
+            }
+        }
+
+        function saveQuestions() {
+            localStorage.setItem("answers", JSON.stringify(answers));
+        }
+
+        function getAnswer() {
+            let question = document.getElementById("question").value.trim().toLowerCase();
+            let answerField = document.getElementById("answer");
+            
+            for (let key in answers) {
+                if (question.includes(key.toLowerCase())) {
+                    answerField.value = answers[key];
+                    return;
+                }
+            }
+            
+            answerField.value = "Javob topilmadi";
+        }
+
+        function addNewQA() {
+            let newQuestion = document.getElementById("new-question").value.trim().toLowerCase();
+            let newAnswer = document.getElementById("new-answer").value.trim();
+            
+            if (newQuestion && newAnswer) {
+                answers[newQuestion] = newAnswer;
+                saveQuestions();
+                alert("Yangi savol va javob qo'shildi!");
+                document.getElementById("new-question").value = "";
+                document.getElementById("new-answer").value = "";
+            } else {
+                alert("Iltimos, savol va javobni kiriting!");
+            }
+        }
+    </script>
+</body>
+</html>
